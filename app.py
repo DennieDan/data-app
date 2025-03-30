@@ -1,10 +1,12 @@
 import streamlit as st
 import pandas as pd
+from pandasai import SmartDataframe
+from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
-import os
 
 # Initialize LIDA
 openai_key = st.secrets["OPENAI_API_KEY"]
+llm = OpenAI(api_token=openai_key)
 manager = Manager(TextGenerationConfig(model="gpt-4", api_key=openai_key))
 
 # Streamlit UI
@@ -24,6 +26,8 @@ if uploaded_file:
 
     # Get basic data
     df_nrows = len(df)
+    # Create SmartDataFrame with LLM
+    sdf = SmartDataframe(df, config={"llm": llm})
 
     # Display top N rows
     def update_slider():
@@ -42,5 +46,8 @@ if uploaded_file:
     query = st.text_input("Ask a question about the data:")
     
     if st.button("Analyze"):
-        insight = manager.summarize(df, query)
-        st.write(insight)
+        if query:
+            with st.spinner("Analyzing..."):
+                response = sdf.chat(query)
+                st.subheader("Response:")
+                st.write(response)

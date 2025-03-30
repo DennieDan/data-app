@@ -3,6 +3,7 @@
 .streamlit/*
 myvenv/
 cache/
+exports/
 
 # Compiled source #
 ###################

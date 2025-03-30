@@ -28,5 +28,5 @@ df = pd.read_csv('Titanic.csv')
 # Create SmartDataFrame with LLM
 sdf = SmartDataframe(df, config={"llm": llm})
 
-response = sdf.chat('Make a pie chart people survived by gender')
+response = sdf.chat('How many males in total?')
 print(response)
