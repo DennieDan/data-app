@@ -3,6 +3,7 @@ import pandas as pd
 from pandasai import SmartDataframe
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
+import matplotlib.pyplot as plt
 
 # Initialize LIDA
 openai_key = st.secrets["OPENAI_API_KEY"]
@@ -42,12 +43,20 @@ if uploaded_file:
     st.dataframe(df.head(n_rows))
 
     # **LIDA AI Analysis**
-    st.subheader("LIDA AI Insights")
-    query = st.text_input("Ask a question about the data:")
-    
-    if st.button("Analyze"):
-        if query:
-            with st.spinner("Analyzing..."):
+
+    with st.form(key="query_form"):
+        query = st.text_input("Ask a question about the data:", key="user_query")
+        submit_button = st.form_submit_button(label="Analyze")
+
+    if submit_button and query:
+        with st.spinner("Analyzing..."):
                 response = sdf.chat(query)
                 st.subheader("Response:")
                 st.write(response)
+        
+        # with st.spinner("Generating visualization..."):
+        #     insights = manager.visualize(df, query)
+        #     fig, ax = plt.subplots()
+        #     insights.render(ax=ax)
+        #     st.pyplot(fig)
+    
