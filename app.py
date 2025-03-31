@@ -28,7 +28,7 @@ if uploaded_file:
     # Get basic data
     df_nrows = len(df)
     # Create SmartDataFrame with LLM
-    sdf = SmartDataframe(df, config={"llm": llm})
+    sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
 
     # Display top N rows
     def update_slider():
@@ -42,12 +42,7 @@ if uploaded_file:
                        on_change=update_numin)
     st.dataframe(df.head(n_rows))
 
-    # **LIDA AI Analysis**
-
-    # with st.form(key="query_form"):
-    #     query = st.text_input("Ask a question about the data:", key="user_query")
-    #     submit_button = st.form_submit_button(label="Analyze")
-
+    # Input Analysis
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -56,18 +51,21 @@ if uploaded_file:
     if query:
         with st.spinner("Analyzing..."):
             response = sdf.chat(query)
+            st.write(isinstance(response, plt.Figure))
+
+            # Append user query
             st.session_state.messages.append({"role": "user", "content": query})
-            st.session_state.messages.append({"role": "assistant", "content": response})
-    
+
+            # Check if PandasAI generated a plot
+            if isinstance(response, str) and response.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                st.session_state.messages.append({"role": "assistant", "content": response, "type": "image"})
+            else:
+                st.session_state.messages.append({"role": "assistant", "content": response, "type": "text"})
+
+    # Display messages
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-            st.image(message["content"])
-
-    # if submit_button and query:
-    #     with st.spinner("Analyzing..."):
-    #         response = sdf.chat(query)
-    #         st.subheader("Response:")
-    #         st.write(response)
-    #         st.image(response)
-        
+            if message.get("type") == "image":
+                st.image(message["content"])  # Display as image
+            else:
+                st.markdown(message["content"])  # Display as text 
