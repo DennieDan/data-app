@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pandasai import SmartDatalake
+from pandasai import SmartDatalake, Agent
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
 import matplotlib.pyplot as plt
@@ -55,7 +55,7 @@ if data_frames:
     st.sidebar.dataframe(df.head(n_rows))
 
 # SmartDatalake
-sdl = SmartDatalake(list(data_frames.values()), config={"llm": llm, "save_charts": False, "open_charts": False})
+agent = Agent(list(data_frames.values()), config={"llm": llm, "save_charts": False, "open_charts": False})
 
 # Input Analysis 
 if "messages" not in st.session_state:
@@ -69,8 +69,7 @@ if query:
         st.session_state.messages.append({"role": "assistant", "content": "No data available for analysis. Please upload your data."})
     else:
         with st.spinner("Analyzing..."):
-            response = sdl.chat(query)
-            st.write(isinstance(response, plt.Figure))
+            response = agent.chat(query)
 
             # Append user query
             st.session_state.messages.append({"role": "user", "content": query})
