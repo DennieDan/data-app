@@ -1,6 +1,7 @@
 ## AI-Powered Data Analyzer App 📊
 > **To Cyber Sierra interviewers:**
-> 
+> Thank you so much for reviewing my application
+>
 > The application is currently in progress.
 > 
 > Expected completion date and time: 2 April 12 AM 
