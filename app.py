@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # Initialize LIDA
 openai_key = st.secrets["OPENAI_API_KEY"]
 llm = OpenAI(api_token=openai_key)
-manager = Manager(TextGenerationConfig(model="gpt-4", api_key=openai_key))
+manager = Manager()
 
 # Streamlit UI
 st.title("AI-Powered Data Viewer 📊")
@@ -50,10 +50,22 @@ if uploaded_file:
 
     if submit_button and query:
         with st.spinner("Analyzing..."):
-                response = sdf.chat(query)
-                st.subheader("Response:")
-                st.write(response)
+            response = sdf.chat(query)
+            st.subheader("Response:")
+            st.write(response)
+            # st.pyplot(plt.gcf())
+            st.image(response)
         
+            # if hasattr(response, "figure"):
+            #     print("yes")
+            #     st.subheader("Generated Plot:")
+            #     st.pyplot(response.figure)
+
+        # Force PandasAI to generate and display the graph inline
+        # with st.spinner("Generating graph..."):
+        #     fig, ax = plt.subplots()
+        #     sdf.chat(query, ax=ax)  # Pass matplotlib axes to ensure it plots inline
+        #     st.pyplot(fig)  # Display the figure in Streamlit
         # with st.spinner("Generating visualization..."):
         #     insights = manager.visualize(df, query)
         #     fig, ax = plt.subplots()
