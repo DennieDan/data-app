@@ -17,8 +17,7 @@ Visit our Data Analyzer App [here]() and enjoy exploring your data.
 ![chat_piechart](./images/chat_piechart.png)
 
 ### Acknowledgments
-Slider: https://discuss.streamlit.io/t/circular-connection-of-slider-and-text-input/11015/4
-
-ChatGPT OpenAI: Upload, accepting inputs
-
-Chat interface: https://www.youtube.com/watch?v=jpoqXbvP6Co&t=432s
+* OpenAI API Key is provided from **Cyber Sierra (Fort One Technologies Pte Ltd)** 
+* Slider (for number of rows) design is adapted from https://discuss.streamlit.io/t/circular-connection-of-slider-and-text-input/11015/4
+* First touch of the code including _file uploading_, and _input accepting_ is implemented with the help of OpenAI ChatGPT (GPT 3.5)
+* Chat interface is adapted from https://www.youtube.com/watch?v=jpoqXbvP6Co&t=432s
