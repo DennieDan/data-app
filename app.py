@@ -44,31 +44,30 @@ if uploaded_file:
 
     # **LIDA AI Analysis**
 
-    with st.form(key="query_form"):
-        query = st.text_input("Ask a question about the data:", key="user_query")
-        submit_button = st.form_submit_button(label="Analyze")
+    # with st.form(key="query_form"):
+    #     query = st.text_input("Ask a question about the data:", key="user_query")
+    #     submit_button = st.form_submit_button(label="Analyze")
 
-    if submit_button and query:
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    query = st.chat_input("Ask a question about the data:", key="user_query")
+
+    if query:
         with st.spinner("Analyzing..."):
             response = sdf.chat(query)
-            st.subheader("Response:")
-            st.write(response)
-            # st.pyplot(plt.gcf())
-            st.image(response)
-        
-            # if hasattr(response, "figure"):
-            #     print("yes")
-            #     st.subheader("Generated Plot:")
-            #     st.pyplot(response.figure)
-
-        # Force PandasAI to generate and display the graph inline
-        # with st.spinner("Generating graph..."):
-        #     fig, ax = plt.subplots()
-        #     sdf.chat(query, ax=ax)  # Pass matplotlib axes to ensure it plots inline
-        #     st.pyplot(fig)  # Display the figure in Streamlit
-        # with st.spinner("Generating visualization..."):
-        #     insights = manager.visualize(df, query)
-        #     fig, ax = plt.subplots()
-        #     insights.render(ax=ax)
-        #     st.pyplot(fig)
+            st.session_state.messages.append({"role": "user", "content": query})
+            st.session_state.messages.append({"role": "assistant", "content": response})
     
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+            st.image(message["content"])
+
+    # if submit_button and query:
+    #     with st.spinner("Analyzing..."):
+    #         response = sdf.chat(query)
+    #         st.subheader("Response:")
+    #         st.write(response)
+    #         st.image(response)
+        
