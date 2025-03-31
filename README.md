@@ -10,7 +10,7 @@
 
 You are finding a faster way to understand your data? This is your solution.
 
-Visit our Data Analyzer App [here]() and enjoy exploring your data.
+Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and enjoy exploring your data.
 
 ### Getting Started
 1. **Upload data files:** Drag and drop your data file into the app. Only files of type .csv or .xls are accepted. 
