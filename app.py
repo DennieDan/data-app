@@ -26,17 +26,25 @@ if uploaded_files:
 
         if file_extension == "csv":
             df = pd.read_csv(file)
+            data_frames[file.name] = {"Sheet1": df}
         else:
             xls = pd.ExcelFile(file)
-            sheet_name = st.selectbox("Select a sheet", xls.sheet_names)
-            df = pd.read_excel(xls, sheet_name=sheet_name)
-            
-        data_frames[file.name] = df
+            sheet_name = xls.sheet_names[0]
+            # df = pd.read_excel(xls, sheet_name=sheet_name)
+            data_frames[file.name] = {str(sheet): pd.read_excel(xls, sheet) for sheet in xls.sheet_names} 
+        
 
 if data_frames:
     selected_file = st.sidebar.selectbox("Select a file to view", list(data_frames.keys()))
+    selected_sheet = None
+
+    if len(data_frames[selected_file]) > 1:
+        selected_sheet = st.sidebar.selectbox("Select a sheet for Excel file", list(data_frames[selected_file].keys()))
+    else:
+        selected_sheet = list(data_frames[selected_file].keys())[0] 
+
     # Get basic data
-    df = data_frames[selected_file]
+    df = data_frames[selected_file][selected_sheet]
     df_nrows = len(df)
 
     # Display top N rows
@@ -49,11 +57,15 @@ if data_frames:
     n_rows = st.sidebar.slider("Slide to select", value = val, key = 'slider', 
                     min_value=0, max_value=df_nrows,
                     on_change=update_numin)
-    st.sidebar.write(f"### Viewing: {selected_file}")
+    st.sidebar.write(f"### Viewing: {selected_file} - {selected_sheet}")
     st.sidebar.dataframe(df.head(n_rows))
 
-# SmartDatalake
-agent = Agent(list(data_frames.values()), config={"llm": llm, "save_charts": False, "open_charts": False})
+# Panda AI Agent
+dfs = [df for inner_dict in data_frames.values() for df in inner_dict.values()]
+# Convert column name to str
+for data in dfs:
+    data.columns = data.columns.astype(str)
+agent = Agent(dfs, config={"llm": llm, "save_charts": False, "open_charts": False})
 
 # Input Analysis 
 if "messages" not in st.session_state:
@@ -88,10 +100,6 @@ if query:
         else:
             st.markdown(message["content"])
 
-    for i in range(len(st.session_state.messages)):
-        message = st.session_state.messages[i]
-        if i > 0 and message["role"] == st.session_state.messages[i - 1]["role"]:
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
             display_text(message)
-        else:
-            with st.chat_message(message["role"]):
-                display_text(message)
