@@ -11,44 +11,51 @@ llm = OpenAI(api_token=openai_key)
 manager = Manager()
 
 # Streamlit UI
-st.title("AI-Powered Data Viewer 📊")
+st.title("AI-Powered Data Analyzer 📊")
 
-uploaded_file = st.file_uploader("Upload CSV or Excel file", type=["csv", "xlsx"])
+# Side bar
 
-if uploaded_file:
-    file_extension = uploaded_file.name.split(".")[-1]
+with st.sidebar:
+    uploaded_file = st.file_uploader("Upload CSV or Excel file", type=["csv", "xlsx"])
 
-    if file_extension == "csv":
-        df = pd.read_csv(uploaded_file)
+    if uploaded_file:
+        file_extension = uploaded_file.name.split(".")[-1]
+
+        if file_extension == "csv":
+            df = pd.read_csv(uploaded_file)
+        else:
+            xls = pd.ExcelFile(uploaded_file)
+            sheet_name = st.selectbox("Select a sheet", xls.sheet_names)
+            df = pd.read_excel(xls, sheet_name=sheet_name)
+
+        # Get basic data
+        df_nrows = len(df)
+        # Create SmartDataFrame with LLM
+        sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
+
+        # Display top N rows
+        def update_slider():
+            st.session_state.slider = st.session_state.numeric
+        def update_numin():
+            st.session_state.numeric = st.session_state.slider
+        
+        val = st.sidebar.number_input("Select the number of rows to display", value = 0, key = "numeric", on_change=update_slider)
+        n_rows = st.sidebar.slider("Slide to select", value = val, key = 'slider', 
+                        min_value=0, max_value=df_nrows,
+                        on_change=update_numin)
+        st.sidebar.dataframe(df.head(n_rows))
+
+# Input Analysis
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+query = st.chat_input("Ask a question about the data:", key="user_query")
+
+if query:
+    if not uploaded_file:
+        st.session_state.messages.append({"role": "user", "content": query})
+        st.session_state.messages.append({"role": "assistant", "content": "No data available for analysis. Please upload your data."})
     else:
-        xls = pd.ExcelFile(uploaded_file)
-        sheet_name = st.selectbox("Select a sheet", xls.sheet_names)
-        df = pd.read_excel(xls, sheet_name=sheet_name)
-
-    # Get basic data
-    df_nrows = len(df)
-    # Create SmartDataFrame with LLM
-    sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
-
-    # Display top N rows
-    def update_slider():
-        st.session_state.slider = st.session_state.numeric
-    def update_numin():
-        st.session_state.numeric = st.session_state.slider
-    
-    val = st.number_input('Input', value = 0, key = 'numeric', on_change=update_slider)
-    n_rows = st.slider("Select number of rows to display", value = val, key = 'slider', 
-                       min_value=0, max_value=df_nrows,
-                       on_change=update_numin)
-    st.dataframe(df.head(n_rows))
-
-    # Input Analysis
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    query = st.chat_input("Ask a question about the data:", key="user_query")
-
-    if query:
         with st.spinner("Analyzing..."):
             response = sdf.chat(query)
             st.write(isinstance(response, plt.Figure))
