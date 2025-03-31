@@ -38,8 +38,6 @@ if data_frames:
     # Get basic data
     df = data_frames[selected_file]
     df_nrows = len(df)
-    # Create SmartDataFrame with LLM
-    # sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
 
     # Display top N rows
     def update_slider():
@@ -80,10 +78,20 @@ if query:
             else:
                 st.session_state.messages.append({"role": "assistant", "content": response, "type": "text"})
 
+            explanation = agent.explain()
+            st.session_state.messages.append({"role": "assistant", "content": explanation, "type": "text"})
+
     # Display messages
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            if message.get("type") == "image":
-                st.image(message["content"])  # Display as image
-            else:
-                st.markdown(message["content"])  # Display as text 
+    def display_text(message):
+        if message.get("type") == "image":
+            st.image(message["content"])
+        else:
+            st.markdown(message["content"])
+
+    for i in range(len(st.session_state.messages)):
+        message = st.session_state.messages[i]
+        if i > 0 and message["role"] == st.session_state.messages[i - 1]["role"]:
+            display_text(message)
+        else:
+            with st.chat_message(message["role"]):
+                display_text(message)
