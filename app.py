@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pandasai import SmartDataframe
+from pandasai import SmartDatalake
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
 import matplotlib.pyplot as plt
@@ -39,7 +39,7 @@ if data_frames:
     df = data_frames[selected_file]
     df_nrows = len(df)
     # Create SmartDataFrame with LLM
-    sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
+    # sdf = SmartDataframe(df, config={"llm": llm, "save_charts": False})
 
     # Display top N rows
     def update_slider():
@@ -54,7 +54,10 @@ if data_frames:
     st.sidebar.write(f"### Viewing: {selected_file}")
     st.sidebar.dataframe(df.head(n_rows))
 
-# Input Analysis
+# SmartDatalake
+sdl = SmartDatalake(list(data_frames.values()), config={"llm": llm, "save_charts": False, "open_charts": False})
+
+# Input Analysis 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -66,7 +69,7 @@ if query:
         st.session_state.messages.append({"role": "assistant", "content": "No data available for analysis. Please upload your data."})
     else:
         with st.spinner("Analyzing..."):
-            response = sdf.chat(query)
+            response = sdl.chat(query)
             st.write(isinstance(response, plt.Figure))
 
             # Append user query
