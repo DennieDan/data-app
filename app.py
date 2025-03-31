@@ -28,7 +28,7 @@ if uploaded_files:
             df = pd.read_csv(file)
         else:
             xls = pd.ExcelFile(file)
-            sheet_name = st.selectbox("Select a sheet", xls.sheet_names)
+            sheet_name = xls.sheet_names[0]
             df = pd.read_excel(xls, sheet_name=sheet_name)
             
         data_frames[file.name] = df
@@ -88,10 +88,6 @@ if query:
         else:
             st.markdown(message["content"])
 
-    for i in range(len(st.session_state.messages)):
-        message = st.session_state.messages[i]
-        if i > 0 and message["role"] == st.session_state.messages[i - 1]["role"]:
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
             display_text(message)
-        else:
-            with st.chat_message(message["role"]):
-                display_text(message)
