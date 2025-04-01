@@ -1,7 +1,9 @@
-pandas
+pandas>=2.0.0
 pandasai
 streamlit
 openai
 python-dotenv
 lida
 openpyxl
+numpy>=1.23.0
+scipy
