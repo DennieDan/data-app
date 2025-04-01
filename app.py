@@ -4,15 +4,13 @@ import json
 import os
 from pandasai import SmartDatalake, Agent
 from pandasai.llm.openai import OpenAI
-from lida import Manager, TextGenerationConfig
 
 SAVE_DIR = "/opt/render/project/tmp/"
 DB_FILE = os.path.join(SAVE_DIR, "db.json")
 NO_DATA_RESPONSE = "No data available for analysis. Please upload your data."
-# Initialize LIDA
+# Initialize llm
 openai_key = os.getenv("OPENAI_API_KEY")
 llm = OpenAI(api_token=openai_key)
-manager = Manager()
 
 # Streamlit UI
 st.title("AI-Powered Data Analyzer 📊")

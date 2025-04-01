@@ -1,9 +1,8 @@
 pandas>=2.0.0
-pandasai
+pandasai==2.4.2
 streamlit
 openai
 python-dotenv
-lida
 openpyxl
 numpy>=1.23.0
 scipy
