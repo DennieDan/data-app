@@ -10,7 +10,14 @@
 
 You are finding a faster way to understand your data? This is your solution.
 
-Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and enjoy exploring your data.
+Visit our Data Analyzer App and enjoy exploring your data. Currently there are 2 versions:
+* **_Non-prompting storage version_** (Deployed on Streamlit Cloud): [https://dan-data-analyzer.streamlit.app/](https://dan-data-analyzer.streamlit.app/)
+
+    If you prefer a fast and handy application and do not require to store your prompting history, this version is for you. Your privacy is prioritised.
+
+* **_Prompting storage version_** (Deployed on Render): [https://dan-data-analyzer.streamlit.app/](https://dan-data-analyzer.streamlit.app/)
+
+    Your prompting history including prompts and responses from the app is saved on the cloud. Kindly navigate to [Warning](#warning-to-be-updated-in-the-future-versions) for security issues.
 
 ### Getting Started
 1. **Upload data files:** Drag and drop your data file into the app. Only files of type .csv or .xls are accepted. 
@@ -22,6 +29,14 @@ Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and
 
 1. Ask your Data Analyzer any questions about your data by typing into the text area.
 ![chat_piechart](./images/chat_piechart.png)
+
+> [!TIP]
+>
+> 1. As you are able to upload multiple datasets, you are suggested to refer to the specific datasets for each prompt for more accurate and relevant response from our agent. 
+>
+>       Currently, the datasets and sheets from each dataset can only be referred to by ordinal numbers instead of their names.
+> ![tips1](./images/tips1.png)
+
 
 ### Acknowledgments
 * OpenAI API Key is provided from **Cyber Sierra (Fort One Technologies Pte Ltd)** 
