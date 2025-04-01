@@ -1,10 +1,13 @@
 import streamlit as st
 import pandas as pd
+import json
+import os
 from pandasai import SmartDatalake, Agent
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
-import matplotlib.pyplot as plt
 
+DB_FILE = "db.json"
+NO_DATA_RESPONSE = "No data available for analysis. Please upload your data."
 # Initialize LIDA
 openai_key = st.secrets["OPENAI_API_KEY"]
 llm = OpenAI(api_token=openai_key)
@@ -13,8 +16,30 @@ manager = Manager()
 # Streamlit UI
 st.title("AI-Powered Data Analyzer 📊")
 
-# Side bar
+# Load chat history from db.json
+if os.path.exists(DB_FILE):
+    try:
+        with open(DB_FILE, "r") as chat:
+            db = json.load(chat)
+            st.session_state.messages = db.get('chat_history', [])
+    except (json.JSONDecodeError, IOError):
+        st.session_state.messages = []  # Handle corrupt or unreadable file
+else:
+    st.session_state.messages = []  # File doesn't exist, start fresh
 
+# Display messages
+def display_text(message):
+    if message.get("type") == "image":
+        st.image(message["content"])
+    else:
+        st.markdown(message["content"])
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        display_text(message)
+
+
+# Side bar
 with st.sidebar:
     uploaded_files = st.file_uploader("Upload CSV or Excel file", accept_multiple_files=True, type=["csv", "xlsx"])
 
@@ -65,7 +90,7 @@ dfs = [df for inner_dict in data_frames.values() for df in inner_dict.values()]
 # Convert column name to str
 for data in dfs:
     data.columns = data.columns.astype(str)
-agent = Agent(dfs, config={"llm": llm, "save_charts": False, "open_charts": False})
+agent = Agent(dfs, config={"llm": llm, "save_charts": True, "open_charts": False})
 
 # Input Analysis 
 if "messages" not in st.session_state:
@@ -74,32 +99,34 @@ if "messages" not in st.session_state:
 query = st.chat_input("Ask a question about the data:", key="user_query")
 
 if query:
+    # Append user query
+    st.session_state.messages.append({"role": "user", "content": query})
+    with st.chat_message("user"):
+        st.markdown(query)
     if not uploaded_files:
-        st.session_state.messages.append({"role": "user", "content": query})
-        st.session_state.messages.append({"role": "assistant", "content": "No data available for analysis. Please upload your data."})
+        st.session_state.messages.append({"role": "assistant", "content": NO_DATA_RESPONSE})
+        with st.chat_message("assistant"):
+            st.markdown(NO_DATA_RESPONSE)
     else:
         with st.spinner("Analyzing..."):
             response = agent.chat(query)
 
-            # Append user query
-            st.session_state.messages.append({"role": "user", "content": query})
-
+            temp_res = None
             # Check if PandasAI generated a plot
             if isinstance(response, str) and response.endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                st.session_state.messages.append({"role": "assistant", "content": response, "type": "image"})
+                temp_res = {"role": "assistant", "content": response, "type": "image"}
             else:
-                st.session_state.messages.append({"role": "assistant", "content": response, "type": "text"})
-
+                temp_res = {"role": "assistant", "content": response, "type": "text"}
+            st.session_state.messages.append(temp_res)
             explanation = agent.explain()
-            st.session_state.messages.append({"role": "assistant", "content": explanation, "type": "text"})
-
-    # Display messages
-    def display_text(message):
-        if message.get("type") == "image":
-            st.image(message["content"])
-        else:
-            st.markdown(message["content"])
-
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            display_text(message)
+            temp_exp = {"role": "assistant", "content": explanation, "type": "text"}
+            st.session_state.messages.append(temp_exp)
+        
+        with st.chat_message("assistant"):
+            display_text(temp_res)
+            display_text(temp_exp)
+    
+    # Store chat into db.json
+    db = {"chat_history": st.session_state.messages}
+    with open(DB_FILE, 'w') as chat:
+        json.dump(db, chat, indent=4)
