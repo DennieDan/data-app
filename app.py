@@ -130,3 +130,12 @@ if query:
     db = {"chat_history": st.session_state.messages}
     with open(DB_FILE, 'w') as chat:
         json.dump(db, chat, indent=4)
+
+# Clear prompt history
+if st.sidebar.button('Clear Prompt History'):
+    db["chat_history"] = []
+    with open(DB_FILE, "w") as chat:
+        json.dump(db, chat)
+    # Clear messages in session_state
+    st.session_state.messages = []
+    st.rerun()
