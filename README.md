@@ -30,3 +30,6 @@ Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and
 * Chat interface is adapted from https://www.youtube.com/watch?v=jpoqXbvP6Co&t=432s
 * Store prompting history idea: https://tsjohnnychan.medium.com/a-chatgpt-app-with-streamlit-advanced-version-32b4d4a993fb
 https://rosarioogenio.medium.com/deploying-a-streamlit-application-to-render-as-an-alternative-to-heroku-782317a3aa2c
+
+### Shortcomings
+1. **Prompt history:** Even though prompt history is saved, the current file uploaded is not saved between different app launch; therefore, you cannot continue the previous conversation with the agent. The prompt history is only for reference purpose.

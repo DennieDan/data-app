@@ -6,7 +6,7 @@ from pandasai import SmartDatalake, Agent
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
 
-SAVE_DIR = "/var/data"
+SAVE_DIR = "/opt/render/project/tmp/"
 DB_FILE = os.path.join(SAVE_DIR, "db.json")
 NO_DATA_RESPONSE = "No data available for analysis. Please upload your data."
 # Initialize LIDA
