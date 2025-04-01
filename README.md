@@ -38,7 +38,7 @@ Visit our Data Analyzer App and enjoy exploring your data. Currently there are 2
 > ![tips1](./images/tips1.png)
 
 
-## Acknowledgments
+## Acknowledgements
 * OpenAI API Key is provided from **Cyber Sierra (Fort One Technologies Pte Ltd)** 
 * Slider (for number of rows) design is adapted from https://discuss.streamlit.io/t/circular-connection-of-slider-and-text-input/11015/4
 * First touch of the code including _file uploading_, and _input accepting_ is implemented with the help of OpenAI ChatGPT (GPT 3.5)
