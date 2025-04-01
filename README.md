@@ -29,3 +29,4 @@ Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and
 * First touch of the code including _file uploading_, and _input accepting_ is implemented with the help of OpenAI ChatGPT (GPT 3.5)
 * Chat interface is adapted from https://www.youtube.com/watch?v=jpoqXbvP6Co&t=432s
 * Store prompting history idea: https://tsjohnnychan.medium.com/a-chatgpt-app-with-streamlit-advanced-version-32b4d4a993fb
+https://rosarioogenio.medium.com/deploying-a-streamlit-application-to-render-as-an-alternative-to-heroku-782317a3aa2c

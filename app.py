@@ -10,7 +10,7 @@ SAVE_DIR = "/var/data"
 DB_FILE = os.path.join(SAVE_DIR, "db.json")
 NO_DATA_RESPONSE = "No data available for analysis. Please upload your data."
 # Initialize LIDA
-openai_key = st.secrets["OPENAI_API_KEY"]
+openai_key = os.getenv("OPENAI_API_KEY")
 llm = OpenAI(api_token=openai_key)
 manager = Manager()
 
