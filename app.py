@@ -6,7 +6,8 @@ from pandasai import SmartDatalake, Agent
 from pandasai.llm.openai import OpenAI
 from lida import Manager, TextGenerationConfig
 
-DB_FILE = "db.json"
+SAVE_DIR = "/var/data"
+DB_FILE = os.path.join(SAVE_DIR, "db.json")
 NO_DATA_RESPONSE = "No data available for analysis. Please upload your data."
 # Initialize LIDA
 openai_key = st.secrets["OPENAI_API_KEY"]
@@ -17,6 +18,7 @@ manager = Manager()
 st.title("AI-Powered Data Analyzer 📊")
 
 # Load chat history from db.json
+os.makedirs(SAVE_DIR, exist_ok=True)
 if os.path.exists(DB_FILE):
     try:
         with open(DB_FILE, "r") as chat:
@@ -90,7 +92,7 @@ dfs = [df for inner_dict in data_frames.values() for df in inner_dict.values()]
 # Convert column name to str
 for data in dfs:
     data.columns = data.columns.astype(str)
-agent = Agent(dfs, config={"llm": llm, "save_charts": True, "open_charts": False})
+agent = Agent(dfs, config={"llm": llm, "save_charts": True, "save_charts_path": SAVE_DIR, "open_charts": False})
 
 # Input Analysis 
 if "messages" not in st.session_state:
