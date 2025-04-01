@@ -29,7 +29,8 @@ Visit our Data Analyzer App [here](https://dan-data-analyzer.streamlit.app/) and
 * First touch of the code including _file uploading_, and _input accepting_ is implemented with the help of OpenAI ChatGPT (GPT 3.5)
 * Chat interface is adapted from https://www.youtube.com/watch?v=jpoqXbvP6Co&t=432s
 * Store prompting history idea: https://tsjohnnychan.medium.com/a-chatgpt-app-with-streamlit-advanced-version-32b4d4a993fb
-https://rosarioogenio.medium.com/deploying-a-streamlit-application-to-render-as-an-alternative-to-heroku-782317a3aa2c
+* Deploy Streamlit app on Render: https://rosarioogenio.medium.com/deploying-a-streamlit-application-to-render-as-an-alternative-to-heroku-782317a3aa2c
 
-### Shortcomings
+### Warning!!! (To be updated in the future versions)
+1. **Security Issues:** The application is currently deployed on a limited resources which limits to 1 user at a time. There is no authentication method; therefore, your prompt can be viewed by the next users. Please kindly ```Clear prompt history``` after finish playing around with the application.
 1. **Prompt history:** Even though prompt history is saved, the current file uploaded is not saved between different app launch; therefore, you cannot continue the previous conversation with the agent. The prompt history is only for reference purpose.
