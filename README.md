@@ -15,7 +15,7 @@ Visit our Data Analyzer App and enjoy exploring your data. Currently there are 2
 
     If you prefer a fast and handy application and do not require to store your prompting history, this version is for you. Your privacy is prioritised.
 
-* **_Prompting storage version_** (Deployed on Render): [https://dan-data-analyzer.streamlit.app/](https://dan-data-analyzer.streamlit.app/)
+* **_Prompting storage version_** (Deployed on Render): [https://data-analyzer-ybzy.onrender.com/](https://data-analyzer-ybzy.onrender.com/)
 
     Your prompting history including prompts and responses from the app is saved on the cloud. Kindly navigate to [Warning](#warning-to-be-updated-in-the-future-versions) for security issues.
 
@@ -34,7 +34,7 @@ Visit our Data Analyzer App and enjoy exploring your data. Currently there are 2
 >
 > 1. As you are able to upload multiple datasets, you are suggested to refer to the specific datasets for each prompt for more accurate and relevant response from our agent. 
 >
->       Currently, the datasets and sheets from each dataset can only be referred to by ordinal numbers instead of their names.
+>       Currently, each sheet in an excel file is considered as a separate dataset and you can refer to each dataset by the **ordinal number** according to the order of being uploaded. Kindly refer to the image for clarification.
 > ![tips1](./images/tips1.png)
 
 
