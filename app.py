@@ -54,7 +54,7 @@ if uploaded_files:
             data_frames[file.name] = {"Sheet1": df}
         else:
             xls = pd.ExcelFile(file)
-            sheet_name = xls.sheet_names[0]
+            # sheet_name = xls.sheet_names[0]
             # df = pd.read_excel(xls, sheet_name=sheet_name)
             data_frames[file.name] = {str(sheet): pd.read_excel(xls, sheet) for sheet in xls.sheet_names} 
         
@@ -79,7 +79,7 @@ if data_frames:
         st.session_state.numeric = st.session_state.slider
     
     val = st.sidebar.number_input("Select the number of rows to display", value = 0, key = "numeric", on_change=update_slider)
-    n_rows = st.sidebar.slider("Slide to select", value = val, key = 'slider', 
+    n_rows = st.sidebar.slider("Slide to select", value = st.session_state.get("numeric", 0), key = 'slider', 
                     min_value=0, max_value=df_nrows,
                     on_change=update_numin)
     st.sidebar.write(f"### Viewing: {selected_file} - {selected_sheet}")
